@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AIRestaurantFinder">
         <activity
+            android:name=".HomeScreenActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegistrationScreenActivity"
             android:exported="false" />
         <activity
