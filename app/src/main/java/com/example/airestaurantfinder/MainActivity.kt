@@ -117,7 +117,7 @@ fun SplashScreen() {
 
             Text(
                 text = "AI Restaurant Finder",
-                color = colorResource(id = R.color.white),
+                color = colorResource(id = R.color.black),
                 style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 4.dp)
             )
@@ -154,14 +154,14 @@ fun SplashScreen() {
 
             Text(
                 text = "By",
-                color = colorResource(id = R.color.white),
+                color = colorResource(id = R.color.black),
                 style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Dummy Dummy",
-                color = colorResource(id = R.color.white),
+                text = "Vamshinath",
+                color = colorResource(id = R.color.black),
                 style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 4.dp)
             )

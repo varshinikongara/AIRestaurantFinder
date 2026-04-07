@@ -68,14 +68,14 @@ fun LoginScreen() {
 
             Text(
                 text = "Login",
-                color = colorResource(id = R.color.white),
+                color = colorResource(id = R.color.black),
                 style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 4.dp)
             )
 
             Text(
                 text = "Hello, Welcome Back!",
-                color = colorResource(id = R.color.white),
+                color = colorResource(id = R.color.black),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
@@ -174,7 +174,7 @@ fun LoginScreen() {
             ) {
                 Text(
                     text = "Not a member yet? ",
-                    color = colorResource(id = R.color.white),
+                    color = colorResource(id = R.color.black),
                     style = MaterialTheme.typography.bodyLarge,
                 )
 
