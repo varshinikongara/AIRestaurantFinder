@@ -1,11 +1,6 @@
-package com.example.airestaurantfinder
+package varshinikongara.s3537641.airestaurantfinder
 
-import android.app.Activity
-import android.content.Intent
-import android.hardware.biometrics.BiometricManager
-import android.hardware.biometrics.BiometricPrompt
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,30 +16,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import com.example.airestaurantfinder.ui.theme.AIRestaurantFinderTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.jvm.java
+import varshinikongara.s3537641.airestaurantfinder.ui.theme.AIRestaurantFinderTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +38,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AIRestaurantFinderTheme {
-                MainScreen()
+                RestaurantApp()
             }
         }
     }
@@ -60,45 +46,61 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MainScreen() {
-    var splashStatus by remember { mutableStateOf(true) }
+fun RestaurantApp() {
+    val navController = rememberNavController()
 
-    val context = LocalContext.current as Activity
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Splash.route
+    ) {
 
-    LaunchedEffect(Unit) {
-        delay(3000)
-        splashStatus = false
+        composable(Screen.Splash.route) {
+            SplashScreen(
+                navController
+            )
+        }
+
+        composable(Screen.Login.route) {
+            LoginScreen(navController)
+        }
+
+        composable(Screen.Register.route) {
+            RegistrationScreen(
+                navController
+            )
+        }
+
+        composable(Screen.HomeMain.route) {
+            HomeMainScreen(navController)
+        }
+
+        composable(Screen.Detail.route) { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            DetailScreen(name, navController)
+        }
+
+
     }
-
-    if (splashStatus) {
-        SplashScreen()
-    } else {
-
-//        val currentStatus = StressLevelTesterData.readLS(context)
-//
-//        if (currentStatus) {
-//            openHome(context)
-//        } else {
-//            openLogin(context)
-//
-//        }
-    }
-}
-
-fun openLogin(context: Activity) {
-//    context.startActivity(Intent(context, LoginActivity::class.java))
-//    context.finish()
-}
-
-fun openHome(context: Activity) {
-//    context.startActivity(Intent(context, BaseActivity::class.java))
-//    context.finish()
 }
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(navController: NavController) {
 
-//    val context = LocalContext.current as Activity
+    LaunchedEffect(Unit) {
+        delay(2000)
+        navController.navigate(Screen.Login.route) {
+            popUpTo(Screen.Splash.route) {
+                inclusive = true
+            }
+        }
+    }
+
+    SplashScreenDesign()
+}
+
+
+@Composable
+fun SplashScreenDesign() {
 
     Column(
         modifier = Modifier
@@ -144,7 +146,7 @@ fun SplashScreen() {
                 Image(
                     modifier = Modifier.size(200.dp, 200.dp),
                     painter = painterResource(id = R.drawable.restaurant_finder),
-                    contentDescription = "Grocery Store Manager",
+                    contentDescription = "AI Restaurant Finder",
                 )
 
 
@@ -160,7 +162,7 @@ fun SplashScreen() {
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Vamshinath",
+                text = "Varshini",
                 color = colorResource(id = R.color.black),
                 style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -173,8 +175,3 @@ fun SplashScreen() {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun SplashScreenPreview() {
-    SplashScreen()
-}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "197663317630",
+    "project_id": "ai-restaurant-finder-2bec5",
+    "storage_bucket": "ai-restaurant-finder-2bec5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197663317630:android:9bca9c81a3bce3f029022f",
+        "android_client_info": {
+          "package_name": "varshinikongara.s3537641.airestaurantfinder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9zA8fHOLpUyZs539hZwsa2yoKje789Wc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

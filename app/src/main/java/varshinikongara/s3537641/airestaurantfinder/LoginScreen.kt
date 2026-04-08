@@ -1,14 +1,5 @@
-package com.example.airestaurantfinder
+package varshinikongara.s3537641.airestaurantfinder
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,30 +23,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import kotlin.jvm.java
+import androidx.navigation.NavController
 
 
-class RegistrationScreenActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            RegistrationScreen()
-        }
-    }
-}
+
 
 @Composable
-fun RegistrationScreen() {
-    var userName by remember { mutableStateOf("") }
+fun LoginScreen(navController: NavController) {
     var useremail by remember { mutableStateOf("") }
-    var userPlace by remember { mutableStateOf("") }
     var userpassword by remember { mutableStateOf("") }
 
 //    val context = LocalContext.current as Activity
@@ -74,20 +53,20 @@ fun RegistrationScreen() {
             Spacer(modifier = Modifier.height(100.dp))
 
             Text(
-                text = "Register",
+                text = "Login",
                 color = colorResource(id = R.color.black),
                 style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 4.dp)
             )
 
             Text(
-                text = "Hello, Welcome!",
+                text = "Hello, Welcome Back!",
                 color = colorResource(id = R.color.black),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
 
-            Column (
+            Column(
                 modifier = Modifier
                     .background(
                         color = colorResource(id = R.color.white),
@@ -113,42 +92,11 @@ fun RegistrationScreen() {
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = userName,
-                    onValueChange = { userName = it }
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = "Email Id",
-                    color = colorResource(id = R.color.black),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
                     value = useremail,
                     onValueChange = { useremail = it }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = "Place",
-                    color = colorResource(id = R.color.black),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = userPlace,
-                    onValueChange = { userPlace = it }
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
                     text = "Password",
@@ -179,31 +127,32 @@ fun RegistrationScreen() {
                             }
 
                             else -> {
+
+                                navController.navigate(Screen.HomeMain.route)
+
 //                                val userDetails = UserDetails(
-//                                    userName,
+//                                    "",
 //                                    useremail,
-//                                    userLocation,
+//                                    "",
 //                                    userpassword
 //                                )
-//                                registerUser(userDetails,context);
-
+//
+//                                loginUser(userDetails,context)
                             }
 
                         }
                     },
                     modifier = Modifier
-                        .fillMaxWidth()
-                    ,
+                        .fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.p2),
                         contentColor = colorResource(id = R.color.white)
                     )
                 ) {
-                    Text("Register")
+                    Text("Continue")
                 }
             }
-
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -213,22 +162,27 @@ fun RegistrationScreen() {
                 modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
             ) {
                 Text(
-                    text = "Already a member? ",
+                    text = "Not a member yet? ",
                     color = colorResource(id = R.color.black),
                     style = MaterialTheme.typography.bodyLarge,
                 )
 
                 Text(
-                    text = "Login now",
+                    text = "Join now",
                     color = colorResource(id = R.color.p3),
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Black),
                     modifier = Modifier.clickable {
-//                        context.startActivity(Intent(context, LoginScreenActivity::class.java))
+
+                        navController.navigate(Screen.Register.route)
+
+//                        context.startActivity(Intent(context, RegisterActivity::class.java))
 //                        context.finish()
                     }
                 )
 
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
 
 
         }
@@ -236,44 +190,45 @@ fun RegistrationScreen() {
 
 }
 
-//fun registerUser(userDetails: UserDetails, context: Context) {
+//
+//fun loginUser(userDetails: UserDetails, context: Context) {
 //
 //    val firebaseDatabase = FirebaseDatabase.getInstance()
-//    val databaseReference = firebaseDatabase.getReference("StoreDetails")
+//    val databaseReference = firebaseDatabase.getReference("StoreDetails").child(userDetails.emailid.replace(".", ","))
 //
-//    databaseReference.child(userDetails.emailid.replace(".", ","))
-//        .setValue(userDetails)
-//        .addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                Toast.makeText(context, "You Registered Successfully", Toast.LENGTH_SHORT)
-//                    .show()
+//    databaseReference.get().addOnCompleteListener { task ->
+//        if (task.isSuccessful) {
+//            val storeData = task.result?.getValue(UserDetails::class.java)
+//            if (storeData != null) {
+//                if (storeData.password == userDetails.password) {
 //
+//                    GroceryStoreData.writeLS(context, true)
+//                    GroceryStoreData.writeMail(context, storeData.emailid)
+//                    GroceryStoreData.writeUserName(context, storeData.name)
+//
+//                    context.startActivity(Intent(context, StoreHomeActivity::class.java))
+//
+//                    Toast.makeText(context, "Login Sucessfully", Toast.LENGTH_SHORT).show()
+//
+//                } else {
+//                    Toast.makeText(context, "Seems Incorrect Credentials", Toast.LENGTH_SHORT).show()
+//                }
 //            } else {
-//                Toast.makeText(
-//                    context,
-//                    "Registration Failed",
-//                    Toast.LENGTH_SHORT
-//                ).show()
+//                Toast.makeText(context, "Your account not found", Toast.LENGTH_SHORT).show()
 //            }
-//        }
-//        .addOnFailureListener { _ ->
+//        } else {
 //            Toast.makeText(
 //                context,
 //                "Something went wrong",
 //                Toast.LENGTH_SHORT
 //            ).show()
 //        }
+//
+//    }
 //}
-
-data class UserDetails(
-    var name : String = "",
-    var emailid : String = "",
-    var age : String = "",
-    var password: String = ""
-)
 
 @Preview(showBackground = true)
 @Composable
-fun RegistrationScreenPreview() {
-    RegistrationScreen()
+fun LoginScreenPreview() {
+//    _root_ide_package_.varshinikongara.s3537641.airestaurantfinder.LoginScreen()
 }

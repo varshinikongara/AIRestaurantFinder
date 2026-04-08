@@ -1,4 +1,4 @@
-package com.example.airestaurantfinder.ui.theme
+package varshinikongara.s3537641.airestaurantfinder.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

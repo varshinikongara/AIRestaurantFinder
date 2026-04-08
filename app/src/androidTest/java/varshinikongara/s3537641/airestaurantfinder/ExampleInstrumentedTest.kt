@@ -1,4 +1,4 @@
-package com.example.airestaurantfinder
+package varshinikongara.s3537641.airestaurantfinder
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
