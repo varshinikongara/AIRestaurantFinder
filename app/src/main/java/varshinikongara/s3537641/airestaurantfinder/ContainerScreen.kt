@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -33,6 +34,7 @@ sealed class Screen(val route: String) {
     object Search : Screen("search")
     object Favorites : Screen("favorites")
     object Profile : Screen("profile")
+    object History : Screen("history")
 
     object Detail : Screen("detail/{name}") {
         fun createRoute(name: String) = "detail/$name"
@@ -58,25 +60,24 @@ fun HomeMainScreen(mainNavController: NavController) {
             modifier = Modifier.padding(padding)
         ) {
 
-            // 🏠 Home
             composable(Screen.Home.route) {
-                HomeScreen(mainNavController) // ✅ pass main nav for detail navigation
+                HomeScreen(mainNavController)
             }
 
-            // 🔍 Search
             composable(Screen.Search.route) {
                 SearchScreen(mainNavController)
             }
 
-            // ❤️ Favorites
             composable(Screen.Favorites.route) {
-                FavoritesScreen()
+                FavoritesScreen(mainNavController)
             }
 
-            // 👤 Profile
-            composable(Screen.Profile.route) {
-                ProfileScreen()
+
+            composable(Screen.History.route)
+            {
+                BookingHistoryScreen()
             }
+
         }
     }
 }
@@ -88,7 +89,7 @@ fun BottomNavigationBar(navController: NavController) {
         Screen.Home,
         Screen.Search,
         Screen.Favorites,
-        Screen.Profile
+        Screen.History
     )
 
     // ✅ Track current route
@@ -100,17 +101,14 @@ fun BottomNavigationBar(navController: NavController) {
         items.forEach { screen ->
 
             NavigationBarItem(
-                selected = currentRoute == screen.route, // ✅ FIX
+                selected = currentRoute == screen.route,
                 onClick = {
                     navController.navigate(screen.route) {
 
-                        // ✅ Prevent multiple copies
                         popUpTo(navController.graph.startDestinationId)
 
-                        // ✅ Avoid duplicates
                         launchSingleTop = true
 
-                        // ✅ Restore state when reselecting
                         restoreState = true
                     }
                 },
@@ -121,6 +119,7 @@ fun BottomNavigationBar(navController: NavController) {
                             Screen.Search -> Icons.Default.Search
                             Screen.Favorites -> Icons.Default.Favorite
                             Screen.Profile -> Icons.Default.Person
+                            Screen.History -> Icons.Default.Menu
                             else -> Icons.Default.Home
                         },
                         contentDescription = screen.route
@@ -131,23 +130,5 @@ fun BottomNavigationBar(navController: NavController) {
                 }
             )
         }
-    }
-}
-
-
-
-
-@Composable
-fun FavoritesScreen() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Favorites")
-    }
-}
-
-
-@Composable
-fun ProfileScreen() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Profile")
     }
 }

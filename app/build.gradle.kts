@@ -1,9 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-//    id("kotlin-kapt")
-
     id("com.google.gms.google-services")
+
+    id("com.google.devtools.ksp")
+    id("androidx.room")      // ✅ Match the version here
+
 }
 
 android {
@@ -40,6 +42,12 @@ android {
     buildFeatures {
         compose = true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
+    }
+
+
 }
 
 dependencies {
@@ -54,6 +62,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
+//    implementation(libs.firebase.database.ktx)
+//    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -62,12 +72,16 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-database-ktx")
+
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.compose.material3:material3:1.2.1")
 
-    implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
+//    implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
     implementation("io.coil-kt:coil-compose:2.6.0")
@@ -78,4 +92,13 @@ dependencies {
 
     implementation("androidx.compose.material3:material3:1.2.1")
 
+
+    val roomVersion = "2.7.0-alpha11" // 👈 Upgrade this
+    implementation("androidx.room:room-runtime:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }

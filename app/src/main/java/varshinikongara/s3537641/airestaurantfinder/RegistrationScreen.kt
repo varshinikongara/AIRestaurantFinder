@@ -1,5 +1,8 @@
 package varshinikongara.s3537641.airestaurantfinder
 
+import android.app.Activity
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,21 +26,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.database.FirebaseDatabase
 
 
 @Composable
 fun RegistrationScreen(navController: NavController) {
+
     var userName by remember { mutableStateOf("") }
     var useremail by remember { mutableStateOf("") }
     var userPlace by remember { mutableStateOf("") }
     var userpassword by remember { mutableStateOf("") }
 
-//    val context = LocalContext.current as Activity
+    val context = LocalContext.current as Activity
 
     Column(
         modifier = Modifier
@@ -149,24 +155,24 @@ fun RegistrationScreen(navController: NavController) {
                     onClick = {
                         when {
                             useremail.isEmpty() -> {
-//                            Toast.makeText(context, " Please Enter Mail", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, " Please Enter Mail", Toast.LENGTH_SHORT).show()
                             }
 
                             userpassword.isEmpty() -> {
-//                            Toast.makeText(context, " Please Enter Password", Toast.LENGTH_SHORT)
-//                                .show()
+                            Toast.makeText(context, " Please Enter Password", Toast.LENGTH_SHORT)
+                                .show()
                             }
 
                             else -> {
-//                                val userDetails = UserDetails(
-//                                    userName,
-//                                    useremail,
-//                                    userLocation,
-//                                    userpassword
-//                                )
-//                                registerUser(userDetails,context);
+                                val userDetails = UserDetails(
+                                    userName,
+                                    useremail,
+                                    userPlace,
+                                    userpassword
+                                )
+                                registerUser(userDetails,context,navController)
 
-                                navController.popBackStack()
+//                                navController.popBackStack()
                             }
 
                         }
@@ -204,8 +210,6 @@ fun RegistrationScreen(navController: NavController) {
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Black),
                     modifier = Modifier.clickable {
                         navController.popBackStack()
-//                        context.startActivity(Intent(context, LoginScreenActivity::class.java))
-//                        context.finish()
                     }
                 )
 
@@ -217,44 +221,45 @@ fun RegistrationScreen(navController: NavController) {
 
 }
 
-//fun registerUser(userDetails: UserDetails, context: Context) {
-//
-//    val firebaseDatabase = FirebaseDatabase.getInstance()
-//    val databaseReference = firebaseDatabase.getReference("StoreDetails")
-//
-//    databaseReference.child(userDetails.emailid.replace(".", ","))
-//        .setValue(userDetails)
-//        .addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                Toast.makeText(context, "You Registered Successfully", Toast.LENGTH_SHORT)
-//                    .show()
-//
-//            } else {
-//                Toast.makeText(
-//                    context,
-//                    "Registration Failed",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//        }
-//        .addOnFailureListener { _ ->
-//            Toast.makeText(
-//                context,
-//                "Something went wrong",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        }
-//}
+fun registerUser(userDetails: UserDetails, context: Context,navController: NavController) {
+
+    val firebaseDatabase = FirebaseDatabase.getInstance()
+    val databaseReference = firebaseDatabase.getReference("UserAccounts")
+
+    databaseReference.child(userDetails.emailid.replace(".", ","))
+        .setValue(userDetails)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(context, "You Registered Successfully", Toast.LENGTH_SHORT)
+                    .show()
+
+                navController.popBackStack()
+
+            } else {
+                Toast.makeText(
+                    context,
+                    "Registration Failed",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        .addOnFailureListener { _ ->
+            Toast.makeText(
+                context,
+                "Something went wrong",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+}
 
 data class UserDetails(
     var name : String = "",
     var emailid : String = "",
-    var age : String = "",
+    var place : String = "",
     var password: String = ""
 )
 
 @Preview(showBackground = true)
 @Composable
 fun RegistrationScreenPreview() {
-//    _root_ide_package_.varshinikongara.s3537641.airestaurantfinder.RegistrationScreen()
 }

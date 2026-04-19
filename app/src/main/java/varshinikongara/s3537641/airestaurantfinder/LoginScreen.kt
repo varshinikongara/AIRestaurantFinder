@@ -1,5 +1,8 @@
 package varshinikongara.s3537641.airestaurantfinder
 
+import android.app.Activity
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,13 +26,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-
-
+import com.google.firebase.database.FirebaseDatabase
 
 
 @Composable
@@ -37,7 +40,7 @@ fun LoginScreen(navController: NavController) {
     var useremail by remember { mutableStateOf("") }
     var userpassword by remember { mutableStateOf("") }
 
-//    val context = LocalContext.current as Activity
+    val context = LocalContext.current as Activity
 
     Column(
         modifier = Modifier
@@ -118,26 +121,30 @@ fun LoginScreen(navController: NavController) {
                     onClick = {
                         when {
                             useremail.isEmpty() -> {
-//                            Toast.makeText(context, " Please Enter Mail", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, " Please Enter Mail", Toast.LENGTH_SHORT)
+                                    .show()
                             }
 
                             userpassword.isEmpty() -> {
-//                            Toast.makeText(context, " Please Enter Password", Toast.LENGTH_SHORT)
-//                                .show()
+                                Toast.makeText(
+                                    context,
+                                    " Please Enter Password",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
                             }
 
                             else -> {
 
-                                navController.navigate(Screen.HomeMain.route)
 
-//                                val userDetails = UserDetails(
-//                                    "",
-//                                    useremail,
-//                                    "",
-//                                    userpassword
-//                                )
+                                val userDetails = UserDetails(
+                                    "",
+                                    useremail,
+                                    "",
+                                    userpassword
+                                )
 //
-//                                loginUser(userDetails,context)
+                                loginUser(userDetails, context, navController)
                             }
 
                         }
@@ -190,45 +197,46 @@ fun LoginScreen(navController: NavController) {
 
 }
 
-//
-//fun loginUser(userDetails: UserDetails, context: Context) {
-//
-//    val firebaseDatabase = FirebaseDatabase.getInstance()
-//    val databaseReference = firebaseDatabase.getReference("StoreDetails").child(userDetails.emailid.replace(".", ","))
-//
-//    databaseReference.get().addOnCompleteListener { task ->
-//        if (task.isSuccessful) {
-//            val storeData = task.result?.getValue(UserDetails::class.java)
-//            if (storeData != null) {
-//                if (storeData.password == userDetails.password) {
-//
-//                    GroceryStoreData.writeLS(context, true)
-//                    GroceryStoreData.writeMail(context, storeData.emailid)
-//                    GroceryStoreData.writeUserName(context, storeData.name)
-//
-//                    context.startActivity(Intent(context, StoreHomeActivity::class.java))
-//
-//                    Toast.makeText(context, "Login Sucessfully", Toast.LENGTH_SHORT).show()
-//
-//                } else {
-//                    Toast.makeText(context, "Seems Incorrect Credentials", Toast.LENGTH_SHORT).show()
-//                }
-//            } else {
-//                Toast.makeText(context, "Your account not found", Toast.LENGTH_SHORT).show()
-//            }
-//        } else {
-//            Toast.makeText(
-//                context,
-//                "Something went wrong",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        }
-//
-//    }
-//}
+fun loginUser(userDetails: UserDetails, context: Context, navController: NavController) {
+
+    val firebaseDatabase = FirebaseDatabase.getInstance()
+    val databaseReference =
+        firebaseDatabase.getReference("UserAccounts").child(userDetails.emailid.replace(".", ","))
+
+    databaseReference.get().addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            val accData = task.result?.getValue(UserDetails::class.java)
+            if (accData != null) {
+                if (accData.password == userDetails.password) {
+
+                    UserAccountSP.saveUserLoginStatus(context, true)
+                    UserAccountSP.saveName(context, accData.name)
+                    UserAccountSP.saveEmail(context, userDetails.emailid)
+                    UserAccountSP.savePlace(context,accData.place)
+
+                    Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT).show()
+
+                    navController.navigate(Screen.HomeMain.route)
+
+                } else {
+                    Toast.makeText(context, "Seems Incorrect Credentials", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            } else {
+                Toast.makeText(context, "Your account not found", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(
+                context,
+                "Something went wrong",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-//    _root_ide_package_.varshinikongara.s3537641.airestaurantfinder.LoginScreen()
 }

@@ -49,6 +49,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.firestore.FirebaseFirestore
+import varshinikongara.s3537641.airestaurantfinder.data.Restaurant
+import varshinikongara.s3537641.airestaurantfinder.data.SearchViewModel
 
 fun calculateDistance(
     userLat: Double,
@@ -70,195 +72,6 @@ fun calculateDistance(
     return (results[0] / 1000 ).toDouble()// km
 }
 
-class SearchViewModel : ViewModel() {
-
-    private val db = FirebaseFirestore.getInstance()
-
-    var allRestaurants by mutableStateOf<List<Restaurant>>(emptyList())
-    var filteredList by mutableStateOf<List<Restaurant>>(emptyList())
-
-    fun loadRestaurants(userCity: String) {
-        db.collection("restaurants")
-            .get()
-            .addOnSuccessListener {
-
-                val list = it.map { doc ->
-                    doc.toObject(Restaurant::class.java)
-                }
-
-                allRestaurants = list.filter {
-                    it.city.equals(userCity, true)
-                }
-
-                filteredList = allRestaurants
-            }
-    }
-
-    fun applyFilters(
-        query: String,
-        minRating: Double,
-        selectedCuisines: List<String>,
-        maxDistance: Double,
-        isOpen: Boolean,
-        userLat: Double,
-        userLng: Double
-    ) {
-
-        filteredList = allRestaurants.filter { r ->
-
-            val matchesSearch =
-                r.name.contains(query, true) ||
-                        r.cuisine.contains(query, true)
-
-            val matchesRating = r.rating >= minRating
-
-            val matchesCuisine =
-                selectedCuisines.isEmpty() || selectedCuisines.contains(r.cuisine)
-
-            val matchesOpen = !isOpen || r.isOpen
-
-            val matchesDistance =
-                calculateDistance(userLat, userLng, r.latitude, r.longitude) <= maxDistance
-
-            matchesSearch && matchesRating && matchesCuisine && matchesOpen  && matchesDistance
-        }
-    }
-}
-
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun SearchScreenOld(navController: NavController,viewModel: SearchViewModel = viewModel()) {
-
-    val userCity = "London"
-    val userLat = 51.5074
-    val userLng = -0.1278
-
-    var query by remember { mutableStateOf("") }
-    var minRating by remember { mutableStateOf(0.0) }
-    var maxDistance by remember { mutableStateOf(10.0) }
-    var isOpen by remember { mutableStateOf(false) }
-//    var selectedCuisines by remember { mutableStateOf(setOf<String>()) }
-
-    val selectedCuisines = remember { mutableStateListOf<String>() }
-
-    LaunchedEffect(Unit) {
-        viewModel.loadRestaurants(userCity)
-    }
-
-    Column(modifier = Modifier.padding(16.dp)) {
-
-        // 🔍 SEARCH
-        OutlinedTextField(
-            value = query,
-            onValueChange = {
-                query = it
-                viewModel.applyFilters(
-                    query, minRating, selectedCuisines.toList(),
-                    maxDistance, isOpen, userLat, userLng
-                )
-            },
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Search restaurants...") }
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // ⭐ RATING SLIDER
-        Text("Minimum Rating: ${"%.1f".format(minRating)} ⭐")
-        Slider(
-            value = minRating.toFloat(),
-            onValueChange = {
-                minRating = it.toDouble()
-                viewModel.applyFilters(
-                    query, minRating, selectedCuisines.toList(),
-                    maxDistance, isOpen, userLat, userLng
-                )
-            },
-            valueRange = 0f..5f
-        )
-
-        // 📍 DISTANCE SLIDER
-        Text("Max Distance: ${maxDistance.toInt()} km")
-        Slider(
-            value = maxDistance.toFloat(),
-            onValueChange = {
-                maxDistance = it.toDouble()
-                viewModel.applyFilters(
-                    query, minRating, selectedCuisines.toList(),
-                    maxDistance, isOpen, userLat, userLng
-                )
-            },
-            valueRange = 1f..20f
-        )
-
-        // 🟢 OPEN NOW TOGGLE
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Open Now")
-            Switch(
-                checked = isOpen,
-                onCheckedChange = {
-                    isOpen = it
-                    viewModel.applyFilters(
-                        query, minRating, selectedCuisines.toList(),
-                        maxDistance, isOpen, userLat, userLng
-                    )
-                }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // 🍽 CUISINE MULTI SELECT
-        val cuisines = listOf("Indian", "Italian", "Pizza", "Burgers", "Chinese")
-
-        Text("Select Cuisines")
-
-        Row(
-            modifier = Modifier
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-
-            cuisines.forEach { cuisine ->
-
-                val selected = selectedCuisines.contains(cuisine)
-
-                FilterChip(
-                    selected = selected,
-                    onClick = {
-
-                        if (selected) {
-                            selectedCuisines.remove(cuisine)
-                        } else {
-                            selectedCuisines.add(cuisine)
-                        }
-
-                        viewModel.applyFilters(
-                            query,
-                            minRating,
-                            selectedCuisines.toList(),
-                            maxDistance,
-                            isOpen,
-                            userLat,
-                            userLng
-                        )
-                    },
-                    label = { Text(cuisine) }
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // 📋 RESULTS
-        LazyColumn {
-            items(viewModel.filteredList) {
-                NearbyCard(it, navController)
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -292,6 +105,8 @@ fun SearchScreen(
         viewModel.loadRestaurants(userCity)
     }
 
+
+
     Column(modifier = Modifier.padding(16.dp)) {
 
         // 🔍 SEARCH BAR + FILTER ICON
@@ -321,7 +136,6 @@ fun SearchScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 🏷️ SELECTED FILTER CHIPS PREVIEW
         FilterChipsPreview(filterState) {
             filterState = FilterState(0.0, emptyList(), 20.0, false)
             viewModel.applyFilters(
@@ -331,7 +145,6 @@ fun SearchScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 📋 RESULTS / EMPTY STATE
         if (viewModel.filteredList.isEmpty()) {
 
             EmptyState {
@@ -351,7 +164,6 @@ fun SearchScreen(
         }
     }
 
-    // 🔥 Bottom Sheet
     if (showSheet) {
         ModalBottomSheet(
             onDismissRequest = { showSheet = false },

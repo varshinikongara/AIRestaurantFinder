@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,7 +36,7 @@ import varshinikongara.s3537641.airestaurantfinder.ui.theme.AIRestaurantFinderTh
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         setContent {
             AIRestaurantFinderTheme {
                 RestaurantApp()
@@ -70,15 +71,30 @@ fun RestaurantApp() {
             )
         }
 
+        composable(Screen.Profile.route) {
+            ProfileScreen(
+                navController
+            )
+        }
+
         composable(Screen.HomeMain.route) {
             HomeMainScreen(navController)
         }
 
-        composable(Screen.Detail.route) { backStackEntry ->
-            val name = backStackEntry.arguments?.getString("name") ?: ""
-            DetailScreen(name, navController)
+        composable("detail/{id}") { backStackEntry ->
+
+            val id = backStackEntry.arguments?.getString("id") ?: ""
+
+            DetailScreen(id, navController)
         }
 
+        composable("book/{id}/{name}") { backStackEntry ->
+
+            val id = backStackEntry.arguments?.getString("id") ?: ""
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+
+            BookTableScreen(id, name, navController)
+        }
 
     }
 }
@@ -86,13 +102,27 @@ fun RestaurantApp() {
 @Composable
 fun SplashScreen(navController: NavController) {
 
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         delay(2000)
-        navController.navigate(Screen.Login.route) {
-            popUpTo(Screen.Splash.route) {
-                inclusive = true
+
+        if(UserAccountSP.getUserLoginStatus(context))
+        {
+            navController.navigate(Screen.HomeMain.route) {
+                popUpTo(Screen.Splash.route) {
+                    inclusive = true
+                }
+            }
+        }else{
+            navController.navigate(Screen.Login.route) {
+                popUpTo(Screen.Splash.route) {
+                    inclusive = true
+                }
             }
         }
+
+
     }
 
     SplashScreenDesign()

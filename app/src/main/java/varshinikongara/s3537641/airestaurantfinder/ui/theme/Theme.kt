@@ -8,6 +8,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
@@ -45,13 +46,21 @@ fun AIRestaurantFinderTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> _root_ide_package_.varshinikongara.s3537641.airestaurantfinder.ui.theme.DarkColorScheme
-        else -> _root_ide_package_.varshinikongara.s3537641.airestaurantfinder.ui.theme.LightColorScheme
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = _root_ide_package_.varshinikongara.s3537641.airestaurantfinder.ui.theme.Typography,
+        colorScheme = LightColors,
+        typography = Typography,
         content = content
     )
 }
+
+private val LightColors = lightColorScheme(
+    primary = PrimaryColor,
+    onPrimary = OnPrimary,
+    secondary = Color(0xFF6B705C),
+    background = Color(0xFFF8F9F4),
+    surface = Color.White
+)
