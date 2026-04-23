@@ -4,7 +4,7 @@ plugins {
     id("com.google.gms.google-services")
 
     id("com.google.devtools.ksp")
-    id("androidx.room")      // ✅ Match the version here
+//    id("androidx.room")      // ✅ Match the version here
 
 }
 
@@ -72,6 +72,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    implementation("androidx.compose.material:material-icons-extended")
+
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
@@ -99,6 +101,6 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
+//room {
+//    schemaDirectory("$projectDir/schemas")
+//}

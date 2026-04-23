@@ -1,6 +1,5 @@
 package varshinikongara.s3537641.airestaurantfinder
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,19 +13,27 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.database.FirebaseDatabase
 import varshinikongara.s3537641.airestaurantfinder.ui.theme.PrimaryColor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,24 +53,37 @@ fun ProfileScreen(
 
     val context = LocalContext.current
 
-    val userName = UserAccountSP.getName(context)
-    val userEmail = UserAccountSP.getEmail(context)
-    val userPlace = UserAccountSP.getPlace(context)
+    var isEditing by remember { mutableStateOf(false) }
+    var showLogoutDialog by remember { mutableStateOf(false) }
+    var showSuccessDialog by remember { mutableStateOf(false) }
+
+    // 🔥 Load from SP
+    var name by remember { mutableStateOf(UserAccountSP.getName(context) ?: "") }
+    var email by remember { mutableStateOf(UserAccountSP.getEmail(context) ?: "") }
+    var place by remember { mutableStateOf(UserAccountSP.getPlace(context) ?: "") }
+
+    val db = FirebaseDatabase.getInstance()
+        .getReference("UserAccounts")
 
     Scaffold(
 
-        // 🔝 APP BAR
         topBar = {
             CenterAlignedTopAppBar(
-                title = {
-                    Text("Profile", fontWeight = FontWeight.Bold)
-                },
+                title = { Text("Profile", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back"
+                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                    }
+                },
+                actions = {
+                    TextButton(
+                        onClick = { isEditing = !isEditing },
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = Color.Black
                         )
+
+                    ) {
+                        Text(if (isEditing) "Cancel" else "Edit")
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -88,46 +109,47 @@ fun ProfileScreen(
             ) {
 
                 Column(
-                    modifier = Modifier.padding(20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    // 👤 Avatar
+                    // Avatar
                     Box(
                         modifier = Modifier
                             .size(80.dp)
-                            .background(
-                                PrimaryColor,
-                                CircleShape
-                            ),
+                            .background(PrimaryColor, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            userName!!,
+                            name.firstOrNull()?.toString() ?: "",
                             fontSize = 28.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
+                            fontWeight = FontWeight.Bold
                         )
                     }
 
                     Spacer(Modifier.height(12.dp))
 
-                    Text(
-                        userName!!,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    if (isEditing) {
+                        OutlinedTextField(
+                            value = name,
+                            onValueChange = { name = it },
+                            label = { Text("Name") }
+                        )
+                    } else {
+                        Text(name, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    }
 
-                    Text(
-                        userEmail!!,
-                        color = Color.Gray
-                    )
+                    Spacer(Modifier.height(6.dp))
+
+                    Text(email, color = Color.Gray)
                 }
             }
 
             Spacer(Modifier.height(20.dp))
 
-            // 📍 DETAILS CARD
+            // 📍 PLACE CARD
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
@@ -136,26 +158,60 @@ fun ProfileScreen(
 
                 Column(Modifier.padding(16.dp)) {
 
-                    ProfileItem("📧 Email", userEmail!!)
-                    Divider(Modifier.padding(vertical = 8.dp))
-                    ProfileItem("📍 Location", userPlace!!)
+                    Text("📍 Location", fontSize = 12.sp, color = Color.Gray)
+
+                    Spacer(Modifier.height(4.dp))
+
+                    if (isEditing) {
+                        OutlinedTextField(
+                            value = place,
+                            onValueChange = { place = it },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    } else {
+                        Text(place, fontSize = 16.sp, fontWeight = FontWeight.Medium)
+                    }
                 }
             }
 
             Spacer(Modifier.height(30.dp))
 
-            // 🚪 LOGOUT BUTTON
+            // 💾 SAVE BUTTON (only in edit mode)
+            if (isEditing) {
+                Button(
+                    onClick = {
+
+                        val updatedUser = UserDetails(
+                            name = name,
+                            emailid = email,
+                            place = place
+                        )
+
+                        db.child(email.replace(".", ","))
+                            .setValue(updatedUser)
+                            .addOnSuccessListener {
+
+                                // update local SP
+                                UserAccountSP.saveName(context, name)
+                                UserAccountSP.savePlace(context, place)
+
+                                showSuccessDialog = true
+                                isEditing = false
+                            }
+
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text("Save Changes")
+                }
+
+                Spacer(Modifier.height(20.dp))
+            }
+
+            // 🚪 LOGOUT
             Button(
-                onClick = {
-
-                    UserAccountSP.saveUserLoginStatus(context,false)
-
-                    Toast.makeText(context, "Logged out", Toast.LENGTH_SHORT).show()
-
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(0) // clear backstack
-                    }
-                },
+                onClick = { showLogoutDialog = true },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -167,7 +223,48 @@ fun ProfileScreen(
             }
         }
     }
+
+    // ✅ SUCCESS DIALOG
+    if (showSuccessDialog) {
+        AlertDialog(
+            onDismissRequest = { showSuccessDialog = false },
+            confirmButton = {
+                Button(onClick = { showSuccessDialog = false }) {
+                    Text("OK")
+                }
+            },
+            title = { Text("Success 🎉") },
+            text = { Text("Profile updated successfully") }
+        )
+    }
+
+    // 🚪 LOGOUT CONFIRMATION
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        UserAccountSP.saveUserLoginStatus(context, false)
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(0)
+                        }
+                    }
+                ) {
+                    Text("Logout")
+                }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = { showLogoutDialog = false }) {
+                    Text("Cancel")
+                }
+            },
+            title = { Text("Logout") },
+            text = { Text("Are you sure you want to logout?") }
+        )
+    }
 }
+
 
 @Composable
 fun ProfileItem(title: String, value: String) {

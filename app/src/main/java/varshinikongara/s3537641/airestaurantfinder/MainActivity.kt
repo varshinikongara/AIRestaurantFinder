@@ -32,6 +32,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import varshinikongara.s3537641.airestaurantfinder.ui.theme.AIRestaurantFinderTheme
+import varshinikongara.s3537641.airestaurantfinder.ui.theme.PrimaryColor
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,7 +136,7 @@ fun SplashScreenDesign() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorResource(id = R.color.p1)),
+            .background(color = PrimaryColor),
     ) {
 
         Column(

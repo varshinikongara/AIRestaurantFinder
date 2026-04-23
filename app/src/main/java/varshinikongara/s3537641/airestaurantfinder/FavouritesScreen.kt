@@ -69,7 +69,7 @@ interface FavoriteDao {
     suspend fun isFavorite(id: String): Boolean
 }
 
-@Database(entities = [FavoriteRestaurant::class], version = 1)
+@Database(entities = [FavoriteRestaurant::class], version = 1,exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun favoriteDao(): FavoriteDao

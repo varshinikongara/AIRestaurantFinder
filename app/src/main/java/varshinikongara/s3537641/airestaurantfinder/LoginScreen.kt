@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.database.FirebaseDatabase
+import varshinikongara.s3537641.airestaurantfinder.ui.theme.PrimaryColor
 
 
 @Composable
@@ -45,7 +46,7 @@ fun LoginScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorResource(id = R.color.p1)),
+            .background(color = PrimaryColor),
     ) {
 
         Column(

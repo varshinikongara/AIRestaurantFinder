@@ -47,8 +47,10 @@ data class Booking(
     val people: Int = 1,
     val specialRequest: String = "",
 
-    val bookingDateTime: String = "", // ✅ NEW
-    val createdDateTime: String = "", // ✅ NEW
+    val selectedItems: List<MenuItem> = emptyList(), // ✅ NEW
+    val totalAmount: Double = 0.0,                   // ✅ NEW
 
-    val createdAt: Long = System.currentTimeMillis()
+    val bookingDateTime: String = "",
+    val createdDateTime: String = "",
+    val createdAt: Long = 0L
 )

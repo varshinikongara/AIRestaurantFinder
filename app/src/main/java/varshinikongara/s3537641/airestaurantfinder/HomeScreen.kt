@@ -43,6 +43,7 @@ fun HomeScreen(
     val userCity = "London"
 
     LaunchedEffect(Unit) {
+//        uploadRestaurantsWithMenuAndReviews()
         viewModel.loadRestaurants(userCity)
     }
 
@@ -83,7 +84,7 @@ fun HomeScreen(
                 .padding(16.dp)
         ) {
 
-            item { SearchBar() }
+//            item { SearchBar() }
 
             item {
                 Spacer(modifier = Modifier.height(16.dp))
@@ -92,6 +93,9 @@ fun HomeScreen(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
             }
 
             item {

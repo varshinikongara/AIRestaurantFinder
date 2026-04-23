@@ -44,6 +44,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import varshinikongara.s3537641.airestaurantfinder.data.Booking
 import varshinikongara.s3537641.airestaurantfinder.ui.theme.PrimaryColor
+import varshinikongara.s3537641.airestaurantfinder.ui.theme.SecColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -163,6 +164,9 @@ fun BookingCardItem(
 
     var showDialog by remember { mutableStateOf(false) }
 
+    val totalItems = booking.selectedItems.size
+    val totalAmount = booking.totalAmount
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -175,7 +179,7 @@ fun BookingCardItem(
             modifier = Modifier.padding(16.dp)
         ) {
 
-            // 🔥 TOP ROW (Restaurant + Status)
+            // 🔥 HEADER
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -185,38 +189,29 @@ fun BookingCardItem(
                 Text(
                     booking.restaurantName,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    maxLines = 1
+                    fontSize = 18.sp
                 )
 
-                // ✅ Status Badge
                 Box(
                     modifier = Modifier
-                        .background(
-                            color = Color(0xFFE8F5E9),
-                            shape = RoundedCornerShape(50)
-                        )
+                        .background(Color(0xFFE8F5E9), RoundedCornerShape(50))
                         .padding(horizontal = 10.dp, vertical = 4.dp)
                 ) {
                     Text(
                         "Confirmed",
                         color = Color(0xFF2E7D32),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
+                        fontSize = 12.sp
                     )
                 }
             }
 
             Spacer(Modifier.height(10.dp))
 
-            // 📅 DATE & TIME (Highlighted Row)
+            // 📅 DATE + TIME
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        Color(0xFFF5F5F5),
-                        RoundedCornerShape(12.dp)
-                    )
+                    .background(Color(0xFFF5F5F5), RoundedCornerShape(12.dp))
                     .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -227,20 +222,74 @@ fun BookingCardItem(
             Spacer(Modifier.height(10.dp))
 
             // 👥 PEOPLE
-            Text(
-                "👥 ${booking.people} people",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
-            )
+            Text("👥 ${booking.people} people")
 
-            // 📝 SPECIAL REQUEST
+            // 📝 REQUEST
             if (booking.specialRequest.isNotEmpty()) {
-                Spacer(Modifier.height(6.dp))
-
                 Text(
                     "📝 ${booking.specialRequest}",
-                    fontSize = 13.sp,
-                    color = Color.Gray
+                    color = Color.Gray,
+                    fontSize = 13.sp
+                )
+            }
+
+            Spacer(Modifier.height(10.dp))
+
+            Divider()
+
+            Spacer(Modifier.height(10.dp))
+
+            // 🍽️ MENU ITEMS (NEW SECTION)
+            if (booking.selectedItems.isNotEmpty()) {
+
+                Text(
+                    "Ordered Items",
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Spacer(Modifier.height(6.dp))
+
+                booking.selectedItems
+                    .groupBy { it.name }
+                    .forEach { (name, items) ->
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("$name x${items.size}")
+                            Text("£${"%.2f".format(items.sumOf { it.price })}")
+                        }
+                    }
+
+                Spacer(Modifier.height(10.dp))
+
+                Divider()
+
+                Spacer(Modifier.height(10.dp))
+            }
+
+            // 💰 SUMMARY (NEW)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Total Items", color = Color.Gray)
+                Text("$totalItems")
+            }
+
+            Spacer(Modifier.height(4.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Total Bill", color = Color.Gray)
+
+                Text(
+                    "£${"%.2f".format(totalAmount)}",
+                    fontWeight = FontWeight.Bold,
+                    color = SecColor
                 )
             }
 
@@ -250,7 +299,7 @@ fun BookingCardItem(
 
             Spacer(Modifier.height(8.dp))
 
-            // 🕒 META INFO
+            // 🕒 META
             Text(
                 "Booked on ${booking.createdDateTime}",
                 fontSize = 12.sp,
@@ -278,6 +327,7 @@ fun BookingCardItem(
         }
     }
 
+    // ⚠️ DIALOG
     if (showDialog) {
 
         AlertDialog(
@@ -288,9 +338,7 @@ fun BookingCardItem(
                         onCancel()
                         showDialog = false
                     },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Red
-                    )
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                 ) {
                     Text("Yes, Cancel")
                 }

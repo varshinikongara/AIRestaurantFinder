@@ -1,6 +1,5 @@
 package varshinikongara.s3537641.airestaurantfinder
 
-import android.R.attr.data
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -46,11 +45,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import varshinikongara.s3537641.airestaurantfinder.data.DetailViewModel
-import androidx.core.net.toUri
+import varshinikongara.s3537641.airestaurantfinder.ui.theme.SecColor
 
 
 @Composable
@@ -63,7 +63,7 @@ fun DetailScreen(
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.loadRestaurantById(id,context)
+        viewModel.loadRestaurantById(id, context)
     }
 
     val restaurant = viewModel.restaurant
@@ -185,9 +185,16 @@ fun DetailScreen(
                                     context.startActivity(intent)
                                 }
                             ) {
-                                Icon(Icons.Default.Call, null)
+                                Icon(
+                                    Icons.Default.Call,
+                                    null,
+                                    tint = SecColor
+                                )
                                 Spacer(Modifier.width(6.dp))
-                                Text("Call")
+                                Text(
+                                    "Call",
+                                    color = SecColor
+                                )
                             }
 
                             OutlinedButton(
@@ -197,9 +204,16 @@ fun DetailScreen(
                                     context.startActivity(Intent(Intent.ACTION_VIEW, uri))
                                 }
                             ) {
-                                Icon(Icons.Default.LocationOn, null)
+                                Icon(
+                                    Icons.Default.LocationOn,
+                                    null,
+                                    tint = SecColor
+                                )
                                 Spacer(Modifier.width(6.dp))
-                                Text("Map")
+                                Text(
+                                    "Map",
+                                    color = SecColor
+                                )
                             }
                         }
                     }
@@ -251,7 +265,7 @@ fun DetailScreen(
                             Text(
                                 "£${item.price}",
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
+                                color = SecColor
                             )
                         }
                     }
