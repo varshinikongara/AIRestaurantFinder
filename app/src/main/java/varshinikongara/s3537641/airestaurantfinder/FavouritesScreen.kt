@@ -45,7 +45,7 @@ import varshinikongara.s3537641.airestaurantfinder.ui.theme.PrimaryColor
 
 @Entity(tableName = "favorites")
 data class FavoriteRestaurant(
-    @PrimaryKey val id: String, // ✅ use firestore doc id
+    @PrimaryKey val id: String,
     val name: String,
     val image: String,
     val rating: Double,
@@ -94,7 +94,7 @@ object DatabaseProvider {
 
 fun FavoriteRestaurant.toRestaurant(): Restaurant {
     return Restaurant(
-        id = id, // ✅ correct
+        id = id,
         name = name,
         image = image,
         rating = rating,
@@ -147,7 +147,6 @@ fun FavoritesScreen(
 
     ) { padding ->
 
-        // 🔥 Empty state
         if (favorites.isEmpty()) {
 
             Box(

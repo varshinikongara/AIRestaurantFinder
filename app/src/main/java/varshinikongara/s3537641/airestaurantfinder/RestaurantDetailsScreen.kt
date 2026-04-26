@@ -78,13 +78,11 @@ fun DetailScreen(
 
     if (restaurant == null) return
 
-//    val data = restaurant
 
     Box {
 
         LazyColumn {
 
-            // 🔥 HERO IMAGE + OVERLAY
             item {
                 Box {
 
@@ -97,7 +95,6 @@ fun DetailScreen(
                         contentScale = ContentScale.Crop
                     )
 
-                    // 🔥 Gradient overlay
                     Box(
                         modifier = Modifier
                             .matchParentSize()
@@ -111,7 +108,6 @@ fun DetailScreen(
                             )
                     )
 
-                    // 🔙 Back
                     IconButton(
                         onClick = { navController.popBackStack() },
                         modifier = Modifier
@@ -121,7 +117,6 @@ fun DetailScreen(
                         Icon(Icons.Default.ArrowBack, null, tint = Color.White)
                     }
 
-                    // ❤️ Favorite
                     IconButton(
                         onClick = { viewModel.toggleFavorite(context) },
                         modifier = Modifier
@@ -137,7 +132,6 @@ fun DetailScreen(
                         )
                     }
 
-                    // 📍 Title on image
                     Column(
                         modifier = Modifier
                             .align(Alignment.BottomStart)
@@ -157,7 +151,6 @@ fun DetailScreen(
                 }
             }
 
-            // 🔥 INFO CARD
             item {
                 Card(
                     modifier = Modifier
@@ -220,7 +213,6 @@ fun DetailScreen(
                 }
             }
 
-            // 🍽 MENU
             item {
                 SectionTitle("Menu")
             }
@@ -272,7 +264,6 @@ fun DetailScreen(
                 }
             }
 
-            // ⭐ REVIEWS
             item {
                 SectionTitle("Reviews")
             }

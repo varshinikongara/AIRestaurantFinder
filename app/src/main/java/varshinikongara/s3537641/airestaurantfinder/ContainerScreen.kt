@@ -92,7 +92,6 @@ fun BottomNavigationBar(navController: NavController) {
         Screen.History
     )
 
-    // ✅ Track current route
     val currentRoute = navController
         .currentBackStackEntryAsState().value?.destination?.route
 

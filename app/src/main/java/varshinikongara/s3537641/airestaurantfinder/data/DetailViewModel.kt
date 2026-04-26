@@ -18,20 +18,6 @@ class DetailViewModel : ViewModel() {
     var isFavorite by mutableStateOf(false)
 
 
-
-    fun loadRestaurantByIdOld(id: String) {
-
-        FirebaseFirestore.getInstance()
-            .collection("restaurants")
-            .document(id)
-            .get()
-            .addOnSuccessListener {
-
-                restaurant = it.toObject(Restaurant::class.java)
-                isLoading = false
-            }
-    }
-
     fun loadRestaurantById(id: String, context: Context) {
 
         val dao = DatabaseProvider.getDatabase(context).favoriteDao()
@@ -49,7 +35,7 @@ class DetailViewModel : ViewModel() {
                 restaurant = data
 
                 viewModelScope.launch {
-                    isFavorite = dao.isFavorite(id) // ✅ FIX
+                    isFavorite = dao.isFavorite(id)
                 }
 
                 isLoading = false
@@ -64,7 +50,7 @@ class DetailViewModel : ViewModel() {
         viewModelScope.launch {
 
             val fav = FavoriteRestaurant(
-                id = data.id, // ✅ IMPORTANT FIX
+                id = data.id,
                 name = data.name,
                 image = data.image,
                 rating = data.rating,
@@ -78,7 +64,6 @@ class DetailViewModel : ViewModel() {
                 dao.insert(fav)
             }
 
-//            isFavorite = !isFavorite
             isFavorite = dao.isFavorite(data.id)
         }
     }

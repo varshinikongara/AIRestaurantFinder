@@ -6,38 +6,27 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,7 +35,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -120,7 +108,6 @@ fun BookTableScreen(
 
     Scaffold(
 
-        // 🔥 APP BAR
         topBar = {
             TopAppBar(
                 title = { Text("Book Table") },
@@ -136,7 +123,6 @@ fun BookTableScreen(
             )
         },
 
-        // 🔥 STICKY BUTTON
         bottomBar = {
             Button(
                 onClick = {
@@ -150,8 +136,8 @@ fun BookTableScreen(
 
                     val bookingId = UUID.randomUUID().toString()
 
-                    val bookingDateTime = "$selectedDate at $selectedTime" // ✅ user selected
-                    val createdDateTime = getCurrentDateTime() // ✅ current time
+                    val bookingDateTime = "$selectedDate at $selectedTime"
+                    val createdDateTime = getCurrentDateTime()
 
                     val booking = Booking(
                         id = bookingId,
@@ -203,7 +189,6 @@ fun BookTableScreen(
                 .fillMaxSize()
         ) {
 
-            // 🏪 RESTAURANT CARD
             item {
                 Card(
                     modifier = Modifier
@@ -223,7 +208,6 @@ fun BookTableScreen(
                 }
             }
 
-            // 📅 DATE CARD
             item {
                 BookingCard(title = "Select Date") {
 
@@ -254,7 +238,6 @@ fun BookTableScreen(
                 }
             }
 
-            // ⏰ TIME CARD
             item {
                 BookingCard(title = "Select Time") {
 
@@ -285,7 +268,6 @@ fun BookTableScreen(
                 }
             }
 
-            // 👥 PEOPLE CARD
             item {
                 BookingCard(title = "Number of People") {
 
@@ -316,7 +298,6 @@ fun BookTableScreen(
                 }
             }
 
-            // 📝 NOTES CARD
             item {
                 BookingCard(title = "Special Request") {
 
@@ -336,7 +317,6 @@ fun BookTableScreen(
 
                     Column {
 
-                        // 🔥 Header Row
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -359,7 +339,6 @@ fun BookTableScreen(
 
                         Spacer(Modifier.height(10.dp))
 
-                        // 🔥 HORIZONTAL MENU
                         LazyRow(
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
@@ -376,7 +355,6 @@ fun BookTableScreen(
 
                                     Column {
 
-                                        // 🍽️ IMAGE
                                         AsyncImage(
                                             model = item.image,
                                             contentDescription = null,
@@ -402,7 +380,6 @@ fun BookTableScreen(
 
                                             Spacer(Modifier.height(8.dp))
 
-                                            // ➕➖ CONTROLS
                                             Row(
                                                 modifier = Modifier.fillMaxWidth(),
                                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -459,7 +436,6 @@ fun BookTableScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
 
-                        // 🛒 Total Items
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -473,7 +449,6 @@ fun BookTableScreen(
 
                         Spacer(Modifier.height(6.dp))
 
-                        // 💰 Total Amount
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -495,7 +470,6 @@ fun BookTableScreen(
         }
     }
 
-    // 🎉 SUCCESS DIALOG (PREMIUM)
     if (showDialog) {
 
         AlertDialog(

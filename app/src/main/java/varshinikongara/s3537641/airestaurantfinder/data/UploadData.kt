@@ -8,7 +8,6 @@ fun uploadRestaurantsWithMenuAndReviews() {
 
     val restaurants = listOf(
 
-        // 1️⃣ Dishoom
         Restaurant(
             id = "1",
             name = "Dishoom Covent Garden",
@@ -49,7 +48,6 @@ fun uploadRestaurantsWithMenuAndReviews() {
             )
         ),
 
-        // 2️⃣ Flat Iron
         Restaurant(
             id = "2",
             name = "Flat Iron Soho",

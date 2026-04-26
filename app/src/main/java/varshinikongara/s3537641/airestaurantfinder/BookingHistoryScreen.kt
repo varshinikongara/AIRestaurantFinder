@@ -119,8 +119,6 @@ fun BookingHistoryScreen() {
                         BookingCardItem(
                             booking = booking,
                             onCancel = {
-//                            val userEmail = FirebaseAuth.getInstance().currentUser?.email
-
                                 db.collection("bookings")
                                     .document(userEmail!!)
                                     .collection("userBookings")
@@ -179,7 +177,6 @@ fun BookingCardItem(
             modifier = Modifier.padding(16.dp)
         ) {
 
-            // 🔥 HEADER
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -207,7 +204,6 @@ fun BookingCardItem(
 
             Spacer(Modifier.height(10.dp))
 
-            // 📅 DATE + TIME
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -221,10 +217,8 @@ fun BookingCardItem(
 
             Spacer(Modifier.height(10.dp))
 
-            // 👥 PEOPLE
             Text("👥 ${booking.people} people")
 
-            // 📝 REQUEST
             if (booking.specialRequest.isNotEmpty()) {
                 Text(
                     "📝 ${booking.specialRequest}",
@@ -239,7 +233,6 @@ fun BookingCardItem(
 
             Spacer(Modifier.height(10.dp))
 
-            // 🍽️ MENU ITEMS (NEW SECTION)
             if (booking.selectedItems.isNotEmpty()) {
 
                 Text(
@@ -269,7 +262,6 @@ fun BookingCardItem(
                 Spacer(Modifier.height(10.dp))
             }
 
-            // 💰 SUMMARY (NEW)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -299,7 +291,6 @@ fun BookingCardItem(
 
             Spacer(Modifier.height(8.dp))
 
-            // 🕒 META
             Text(
                 "Booked on ${booking.createdDateTime}",
                 fontSize = 12.sp,
@@ -308,7 +299,6 @@ fun BookingCardItem(
 
             Spacer(Modifier.height(12.dp))
 
-            // ❌ CANCEL BUTTON
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
@@ -327,7 +317,6 @@ fun BookingCardItem(
         }
     }
 
-    // ⚠️ DIALOG
     if (showDialog) {
 
         AlertDialog(

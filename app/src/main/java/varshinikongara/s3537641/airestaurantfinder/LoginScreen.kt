@@ -51,7 +51,6 @@ fun LoginScreen(navController: NavController) {
 
         Column(
             modifier = Modifier.padding(16.dp),
-//            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             Spacer(modifier = Modifier.height(100.dp))
@@ -144,7 +143,6 @@ fun LoginScreen(navController: NavController) {
                                     "",
                                     userpassword
                                 )
-//
                                 loginUser(userDetails, context, navController)
                             }
 
@@ -182,9 +180,6 @@ fun LoginScreen(navController: NavController) {
                     modifier = Modifier.clickable {
 
                         navController.navigate(Screen.Register.route)
-
-//                        context.startActivity(Intent(context, RegisterActivity::class.java))
-//                        context.finish()
                     }
                 )
 

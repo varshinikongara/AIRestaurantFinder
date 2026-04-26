@@ -57,7 +57,6 @@ fun ProfileScreen(
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showSuccessDialog by remember { mutableStateOf(false) }
 
-    // 🔥 Load from SP
     var name by remember { mutableStateOf(UserAccountSP.getName(context) ?: "") }
     var email by remember { mutableStateOf(UserAccountSP.getEmail(context) ?: "") }
     var place by remember { mutableStateOf(UserAccountSP.getPlace(context) ?: "") }
@@ -101,7 +100,6 @@ fun ProfileScreen(
                 .padding(16.dp)
         ) {
 
-            // 👤 PROFILE CARD
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
@@ -115,7 +113,6 @@ fun ProfileScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    // Avatar
                     Box(
                         modifier = Modifier
                             .size(80.dp)
@@ -149,7 +146,6 @@ fun ProfileScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            // 📍 PLACE CARD
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
@@ -176,7 +172,6 @@ fun ProfileScreen(
 
             Spacer(Modifier.height(30.dp))
 
-            // 💾 SAVE BUTTON (only in edit mode)
             if (isEditing) {
                 Button(
                     onClick = {
@@ -191,7 +186,6 @@ fun ProfileScreen(
                             .setValue(updatedUser)
                             .addOnSuccessListener {
 
-                                // update local SP
                                 UserAccountSP.saveName(context, name)
                                 UserAccountSP.savePlace(context, place)
 
@@ -209,7 +203,6 @@ fun ProfileScreen(
                 Spacer(Modifier.height(20.dp))
             }
 
-            // 🚪 LOGOUT
             Button(
                 onClick = { showLogoutDialog = true },
                 modifier = Modifier.fillMaxWidth(),
@@ -224,7 +217,6 @@ fun ProfileScreen(
         }
     }
 
-    // ✅ SUCCESS DIALOG
     if (showSuccessDialog) {
         AlertDialog(
             onDismissRequest = { showSuccessDialog = false },
@@ -238,7 +230,6 @@ fun ProfileScreen(
         )
     }
 
-    // 🚪 LOGOUT CONFIRMATION
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },
@@ -261,20 +252,6 @@ fun ProfileScreen(
             },
             title = { Text("Logout") },
             text = { Text("Are you sure you want to logout?") }
-        )
-    }
-}
-
-
-@Composable
-fun ProfileItem(title: String, value: String) {
-
-    Column {
-        Text(title, fontSize = 12.sp, color = Color.Gray)
-        Text(
-            value,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium
         )
     }
 }

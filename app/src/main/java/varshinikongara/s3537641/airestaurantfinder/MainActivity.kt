@@ -37,7 +37,6 @@ import varshinikongara.s3537641.airestaurantfinder.ui.theme.PrimaryColor
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
         setContent {
             AIRestaurantFinderTheme {
                 RestaurantApp()

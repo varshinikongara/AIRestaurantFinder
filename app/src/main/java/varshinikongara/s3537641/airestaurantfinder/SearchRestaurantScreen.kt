@@ -86,7 +86,6 @@ fun SearchScreen(
 
     var query by remember { mutableStateOf("") }
 
-    // 🔥 Filter state (global)
     var filterState by remember {
         mutableStateOf(
             FilterState(
@@ -109,7 +108,6 @@ fun SearchScreen(
 
     Column(modifier = Modifier.padding(16.dp)) {
 
-        // 🔍 SEARCH BAR + FILTER ICON
         OutlinedTextField(
             value = query,
             onValueChange = {
@@ -286,9 +284,9 @@ fun FilterBottomSheetContent(
         Text("Rating: ${"%.1f".format(minRating)} ⭐")
         Slider(
             value = minRating.toFloat(),
-            onValueChange = { minRating = it.toDouble() }, // ✅ snap to int
-            valueRange = 1f..5f, // ✅ start from 1
-            steps = 7 // ✅ (5 values → steps = values - 2)
+            onValueChange = { minRating = it.toDouble() },
+            valueRange = 1f..5f,
+            steps = 7
         )
 
         Text("Distance: ${maxDistance.toInt()} km")

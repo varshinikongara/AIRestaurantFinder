@@ -52,7 +52,6 @@ fun HomeScreen(
 
     Scaffold(
 
-        // 🔥 APP BAR
         topBar = {
             TopAppBar(
                 title = {
@@ -83,8 +82,6 @@ fun HomeScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
-
-//            item { SearchBar() }
 
             item {
                 Spacer(modifier = Modifier.height(16.dp))
@@ -122,19 +119,6 @@ fun HomeScreen(
     }
 }
 
-@Composable
-fun SearchBar() {
-    OutlinedTextField(
-        value = "",
-        onValueChange = {},
-        placeholder = { Text("Search restaurants...") },
-        modifier = Modifier.fillMaxWidth(),
-        leadingIcon = {
-            Icon(Icons.Default.Search, contentDescription = null)
-        }
-    )
-}
-
 
 @Composable
 fun TrendingCard(
@@ -166,7 +150,6 @@ fun TrendingCard(
                     contentScale = ContentScale.Crop
                 )
 
-                // ⭐ Rating Badge
                 Text(
                     text = "⭐ ${restaurant.rating}",
                     modifier = Modifier
@@ -210,7 +193,6 @@ fun NearbyCard(
             .fillMaxWidth()
             .padding(vertical = 6.dp)
             .clickable {
-//                navController.navigate("detail/${restaurant.name}")
                 navController.navigate("detail/${restaurant.id}")
             },
         shape = RoundedCornerShape(12.dp),

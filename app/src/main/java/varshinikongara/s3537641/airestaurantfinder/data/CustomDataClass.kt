@@ -33,7 +33,6 @@ data class Restaurant(
     val longitude: Double = 0.0,
     val isOpen: Boolean = true,
 
-    // 🔥 NEW FIELDS
     val menu: List<MenuItem> = emptyList(),
     val reviews: List<Review> = emptyList()
 )
@@ -47,8 +46,8 @@ data class Booking(
     val people: Int = 1,
     val specialRequest: String = "",
 
-    val selectedItems: List<MenuItem> = emptyList(), // ✅ NEW
-    val totalAmount: Double = 0.0,                   // ✅ NEW
+    val selectedItems: List<MenuItem> = emptyList(),
+    val totalAmount: Double = 0.0,
 
     val bookingDateTime: String = "",
     val createdDateTime: String = "",

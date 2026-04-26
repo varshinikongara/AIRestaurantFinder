@@ -53,8 +53,7 @@ fun RegistrationScreen(navController: NavController) {
     ) {
 
         Column(
-            modifier = Modifier.padding(16.dp),
-//            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(16.dp)
         ) {
 
             Spacer(modifier = Modifier.height(100.dp))
@@ -172,8 +171,6 @@ fun RegistrationScreen(navController: NavController) {
                                     userpassword
                                 )
                                 registerUser(userDetails,context,navController)
-
-//                                navController.popBackStack()
                             }
 
                         }
