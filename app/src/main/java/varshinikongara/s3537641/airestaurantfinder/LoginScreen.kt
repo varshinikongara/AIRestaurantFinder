@@ -86,7 +86,7 @@ fun LoginScreen(navController: NavController) {
             {
 
                 Text(
-                    text = "Username",
+                    text = "Email",
                     color = colorResource(id = R.color.black),
                     style = MaterialTheme.typography.bodyMedium,
                 )
@@ -205,10 +205,10 @@ fun loginUser(userDetails: UserDetails, context: Context, navController: NavCont
             if (accData != null) {
                 if (accData.password == userDetails.password) {
 
-                    UserAccountSP.saveUserLoginStatus(context, true)
-                    UserAccountSP.saveName(context, accData.name)
-                    UserAccountSP.saveEmail(context, userDetails.emailid)
-                    UserAccountSP.savePlace(context,accData.place)
+                    UserAccountSP.saveULS(context, true)
+                    UserAccountSP.putName(context, accData.name)
+                    UserAccountSP.putEmail(context, userDetails.emailid)
+                    UserAccountSP.putPlace(context,accData.place)
 
                     Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT).show()
 

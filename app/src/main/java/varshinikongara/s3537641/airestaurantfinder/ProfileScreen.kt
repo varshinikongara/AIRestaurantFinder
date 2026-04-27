@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -57,9 +58,9 @@ fun ProfileScreen(
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showSuccessDialog by remember { mutableStateOf(false) }
 
-    var name by remember { mutableStateOf(UserAccountSP.getName(context) ?: "") }
-    var email by remember { mutableStateOf(UserAccountSP.getEmail(context) ?: "") }
-    var place by remember { mutableStateOf(UserAccountSP.getPlace(context) ?: "") }
+    var name by remember { mutableStateOf(UserAccountSP.fetchName(context) ?: "") }
+    var email by remember { mutableStateOf(UserAccountSP.fetchEmail(context) ?: "") }
+    var place by remember { mutableStateOf(UserAccountSP.fetchPlace(context) ?: "") }
 
     val db = FirebaseDatabase.getInstance()
         .getReference("UserAccounts")
@@ -69,22 +70,38 @@ fun ProfileScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("Profile", fontWeight = FontWeight.Bold) },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
+
                 actions = {
+
+                    // ℹ️ About Us Icon
+                    IconButton(
+                        onClick = {
+                            navController.navigate(Screen.About.route) // ✅ make sure route exists
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "About"
+                        )
+                    }
+
+                    // ✏️ Edit / Cancel
                     TextButton(
                         onClick = { isEditing = !isEditing },
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = Color.Black
                         )
-
                     ) {
                         Text(if (isEditing) "Cancel" else "Edit")
                     }
                 },
+
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = PrimaryColor
                 )
@@ -186,8 +203,8 @@ fun ProfileScreen(
                             .setValue(updatedUser)
                             .addOnSuccessListener {
 
-                                UserAccountSP.saveName(context, name)
-                                UserAccountSP.savePlace(context, place)
+                                UserAccountSP.putName(context, name)
+                                UserAccountSP.putPlace(context, place)
 
                                 showSuccessDialog = true
                                 isEditing = false
@@ -236,7 +253,7 @@ fun ProfileScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        UserAccountSP.saveUserLoginStatus(context, false)
+                        UserAccountSP.saveULS(context, false)
                         navController.navigate(Screen.Login.route) {
                             popUpTo(0)
                         }

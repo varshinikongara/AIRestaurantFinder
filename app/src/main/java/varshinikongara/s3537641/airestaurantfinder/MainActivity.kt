@@ -77,6 +77,12 @@ fun RestaurantApp() {
             )
         }
 
+        composable(Screen.About.route) {
+            AboutUsScreen(
+                navController
+            )
+        }
+
         composable(Screen.HomeMain.route) {
             HomeMainScreen(navController)
         }
@@ -107,7 +113,7 @@ fun SplashScreen(navController: NavController) {
     LaunchedEffect(Unit) {
         delay(2000)
 
-        if(UserAccountSP.getUserLoginStatus(context))
+        if(UserAccountSP.getULS(context))
         {
             navController.navigate(Screen.HomeMain.route) {
                 popUpTo(Screen.Splash.route) {

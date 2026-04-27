@@ -43,7 +43,6 @@ fun HomeScreen(
     val userCity = "London"
 
     LaunchedEffect(Unit) {
-//        uploadRestaurantsWithMenuAndReviews()
         viewModel.loadRestaurants(userCity)
     }
 
