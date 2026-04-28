@@ -55,7 +55,7 @@ fun BookingHistoryScreen() {
     var bookings by remember { mutableStateOf<List<Booking>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
-    val userEmail = UserAccountSP.getEmail(LocalContext.current)
+    val userEmail = UserAccountSP.fetchEmail(LocalContext.current)
 
     LaunchedEffect(Unit) {
 

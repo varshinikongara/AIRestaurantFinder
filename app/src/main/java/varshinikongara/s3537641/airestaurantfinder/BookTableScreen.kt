@@ -127,7 +127,7 @@ fun BookTableScreen(
             Button(
                 onClick = {
 
-                    val userEmail = UserAccountSP.getEmail(context)
+                    val userEmail = UserAccountSP.fetchEmail(context)
 
                     if (selectedDate.isEmpty() || selectedTime.isEmpty()) {
                         Toast.makeText(context, "Select date & time", Toast.LENGTH_SHORT).show()
